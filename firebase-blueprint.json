@@ -1,0 +1,108 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Information about a student or admin user",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "trade": { "type": "string" },
+        "theme": { "type": "string" },
+        "avatar": { "type": "string" },
+        "totalHours": { "type": "number" },
+        "badges": { "type": "array", "items": { "type": "string" } },
+        "school": { "type": "string" },
+        "level": { "type": "string" },
+        "idNumber": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "year": { "type": "string" },
+        "isAdmin": { "type": "boolean" }
+      },
+      "required": ["name", "trade", "email"]
+    },
+    "LogEntry": {
+      "title": "Logbook Entry",
+      "description": "A single daily log entry",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "task": { "type": "string" },
+        "hours": { "type": "number" },
+        "tools": { "type": "array", "items": { "type": "string" } },
+        "materials": { "type": "array", "items": { "type": "string" } },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["draft", "submitted", "verified"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["date", "task", "hours"]
+    },
+    "GlobalConfig": {
+      "title": "Global Configuration",
+      "description": "System-wide branding and settings controlled by admin",
+      "type": "object",
+      "properties": {
+        "appName": { "type": "string" },
+        "customLogo": { "type": "string" },
+        "customDevImage": { "type": "string" },
+        "customDevName": { "type": "string" },
+        "customPrimaryColor": { "type": "string" },
+        "certificates": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Course": {
+      "title": "Educational Course",
+      "description": "A course with video content for students",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "videoType": { "type": "string", "enum": ["youtube", "local"] },
+        "thumbnail": { "type": "string" },
+        "trade": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "videoUrl", "videoType"]
+    },
+    "UserProgress": {
+      "title": "User Course Progress",
+      "description": "Tracking student progress in courses",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["started", "completed"] },
+        "lastWatched": { "type": "string", "format": "date-time" },
+        "progress": { "type": "number" }
+      },
+      "required": ["courseId", "userId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile data"
+    },
+    "/users/{userId}/entries/{entryId}": {
+      "schema": "LogEntry",
+      "description": "User's logbook entries"
+    },
+    "/admin_chamber/{entryId}": {
+      "schema": "LogEntry",
+      "description": "Secure storage for admin-only logbook entries"
+    },
+    "/config/branding": {
+      "schema": "GlobalConfig",
+      "description": "Global branding configuration"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Educational courses available to students"
+    },
+    "/users/{userId}/progress/{progressId}": {
+      "schema": "UserProgress",
+      "description": "Student progress tracking for courses"
+    }
+  }
+}
